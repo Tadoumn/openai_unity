@@ -10,15 +10,29 @@ public class OpenAI : MonoBehaviour
     public OpenAIAuth auth;
     public OpenAIConfig defaultConfig;
 
-    public List<RequestContent> backRequests = new List<RequestContent>();
+    public List<OpenAIRequest> backRequests = new List<OpenAIRequest>();
 
-    public void Request(string prompt, OpenAIConfig config = null)
+    public string RequestIDGenerator()
     {
-        if (config == null)
+        return System.Guid.NewGuid().ToString();
+    }
+
+    public void Request(OpenAIRequest requestForm)
+    {
+        if (requestForm.config == null)
         {
-            config = defaultConfig;
+            requestForm.config = defaultConfig;
         }
-        StartCoroutine(RequestOpenAI(prompt, config));
+        StartCoroutine(RequestOpenAI(requestForm));
+    }
+
+    [System.Serializable]
+    public class OpenAIRequest
+    {
+        public string id;
+        public string prompt;
+        public OpenAIConfig config;
+        public RequestContent content;
     }
 
     [System.Serializable]
@@ -49,17 +63,16 @@ public class OpenAI : MonoBehaviour
         public int total_tokens;
     }
 
-    public void GetRequestBack(UnityWebRequest request)
+    public void GetRequestBack(UnityWebRequest request, OpenAIRequest requestForm)
     {
         
         string content = request.downloadHandler.text;
         RequestContent requestContent = JsonUtility.FromJson<RequestContent>(content);
-        Debug.Log(requestContent.choices[0].text);
-
-        backRequests.Add(requestContent);
+        requestForm.content = requestContent;
+        backRequests.Add(requestForm);
     }
 
-    IEnumerator RequestOpenAI(string prompt, OpenAIConfig config)
+    IEnumerator RequestOpenAI(OpenAIRequest requestForm)
     {
         string url = "https://api.openai.com/v1/completions";
         using (UnityWebRequest request = UnityWebRequest.Post(url, ""))
@@ -68,10 +81,18 @@ public class OpenAI : MonoBehaviour
             request.SetRequestHeader("Authorization", "Bearer " + auth.apiKey);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(
-                "{\"model\": \"" + config.modelName + "\", \"prompt\": \"" + prompt + "\", \"temperature\": " + config.temperature + ", \"max_tokens\": " + config.maxTokenPerRequest + "}"
+                "{\"model\": \"" + requestForm.config.modelName + "\", \"prompt\": \"" + requestForm.prompt + "\", \"temperature\": " + requestForm.config.temperature + ", \"max_tokens\": " + requestForm.config.maxTokenPerRequest + "}"
             ));
+            //Get error if any
             yield return request.SendWebRequest();
-            GetRequestBack(request);
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                GetRequestBack(request, requestForm);
+            }
         }
     }
 }
