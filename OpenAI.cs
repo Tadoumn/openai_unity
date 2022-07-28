@@ -12,14 +12,6 @@ public class OpenAI : MonoBehaviour
 
     public List<RequestContent> backRequests = new List<RequestContent>();
 
-    public string debugPrompt;
-
-    [Button]
-    public void DebugRequest()
-    {
-        Request(debugPrompt);
-    }
-
     public void Request(string prompt, OpenAIConfig config = null)
     {
         if (config == null)
