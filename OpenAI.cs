@@ -22,6 +22,10 @@ public class OpenAI : MonoBehaviour
         {
             requestForm.config = defaultConfig;
         }
+        if(requestForm.id == null)
+        {
+            requestForm.id = RequestIDGenerator();
+        }
         StartCoroutine(RequestOpenAI(requestForm));
     }
 

@@ -16,7 +16,7 @@ public class TextUIToOpenAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        TextRequest();
+
     }
 
     // Update is called once per frame
@@ -26,6 +26,7 @@ public class TextUIToOpenAI : MonoBehaviour
             LookForText();
     }
 
+    [Sirenix.OdinInspector.Button]
     void TextRequest()
     {
         lookingForText = true;
@@ -46,8 +47,7 @@ public class TextUIToOpenAI : MonoBehaviour
             {
                 lookingForText = false;
                 text.text = request.content.choices[0].text;
-                //remove empty lines from text.text
-                text.text = text.text.Replace("\n\n", "\n");
+                text.text = text.text.TrimStart('\r', '\n').TrimEnd('\r', '\n');
                 return;
             }
         }
