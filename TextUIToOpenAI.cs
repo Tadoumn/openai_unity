@@ -26,7 +26,6 @@ public class TextUIToOpenAI : MonoBehaviour
             LookForText();
     }
 
-    [Sirenix.OdinInspector.Button]
     void TextRequest()
     {
         lookingForText = true;
