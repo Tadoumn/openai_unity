@@ -77,7 +77,7 @@ public class OpenAI : MonoBehaviour
 
     IEnumerator RequestOpenAI(OpenAIRequest requestForm)
     {
-        string url = "https://api.openai.com/v1/completions";
+        string url = auth.openAIapiTextCompletionURL;
         using (UnityWebRequest request = UnityWebRequest.Post(url, ""))
         {
             request.SetRequestHeader("Content-Type", "application/json");

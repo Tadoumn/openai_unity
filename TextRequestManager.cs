@@ -36,7 +36,7 @@ public class TextRequestManager : MonoBehaviour
         LookForText();
     }
 
-    void CallTextBubble(GTag[] tags, Text textBubble)
+    public void CallTextBubble(GTag[] tags, Text textBubble)
     {
         TextBubbleObject to;
         to.id = openAI.RequestIDGenerator();
@@ -54,9 +54,10 @@ public class TextRequestManager : MonoBehaviour
         string prompt = "";
         foreach(GTag tag in tags)
         {
-            prompt += tag.type + " " + tag.tag + " ";
-            prompt += Environment.NewLine;
+            prompt += "A robot saying that ";
+            prompt += tag.type + ";" + tag.tag + ";";
         }
+        Debug.Log(prompt);
         return prompt;
     }
     void LookForText()
