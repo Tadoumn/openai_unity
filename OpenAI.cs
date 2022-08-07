@@ -80,17 +80,19 @@ public class OpenAI : MonoBehaviour
         string url = auth.openAIapiTextCompletionURL;
         using (UnityWebRequest request = UnityWebRequest.Post(url, ""))
         {
+            string uploadHandler = "{\"model\": \"" + requestForm.config.modelName + "\", \"prompt\": \"" + requestForm.prompt + "\", \"temperature\": " + requestForm.config.temperature.ToString().Replace(",",".") + ", \"max_tokens\": " + requestForm.config.maxTokenPerRequest + "}";
             request.SetRequestHeader("Content-Type", "application/json");
             request.SetRequestHeader("Authorization", "Bearer " + auth.apiKey);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(
-                "{\"model\": \"" + requestForm.config.modelName + "\", \"prompt\": \"" + requestForm.prompt + "\", \"temperature\": " + requestForm.config.temperature + ", \"max_tokens\": " + requestForm.config.maxTokenPerRequest + "}"
+                uploadHandler
             ));
             //Get error if any
             yield return request.SendWebRequest();
             if (request.isNetworkError || request.isHttpError)
             {
-                Debug.Log(request.error);
+                Debug.Log(request.error + "\n"  + request.downloadHandler.text);
+                Debug.Log(uploadHandler);
             }
             else
             {
