@@ -15,4 +15,4 @@ A simple implementation of openai API for unity
 
 6: backRequest list is updated with openai answer when it comes.
 
-7: The content follow the data structure of openai anwser.
+7: The content follow the data structure of openai answer.
