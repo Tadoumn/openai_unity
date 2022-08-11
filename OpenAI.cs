@@ -64,6 +64,11 @@ public class OpenAI : MonoBehaviour
         public int prompt_tokens;
         public int completion_tokens;
         public int total_tokens;
+
+        public string toString()
+        {
+            return "prompt_tokens: " + prompt_tokens + " completion_tokens: " + completion_tokens + " total_tokens: " + total_tokens;
+        }
     }
 
     public void GetRequestBack(UnityWebRequest request, OpenAIRequest requestForm)
@@ -80,7 +85,7 @@ public class OpenAI : MonoBehaviour
         string url = auth.openAIapiTextCompletionURL;
         using (UnityWebRequest request = UnityWebRequest.Post(url, ""))
         {
-            string uploadHandler = "{\"model\": \"" + requestForm.config.modelName + "\", \"prompt\": \"" + requestForm.prompt + "\", \"temperature\": " + requestForm.config.temperature.ToString().Replace(",",".") + ", \"max_tokens\": " + requestForm.config.maxTokenPerRequest + "}";
+            string uploadHandler = "{\"model\": \"" + requestForm.config.modelName + "\", \"prompt\": \"" + requestForm.prompt.Replace("\"","'") + "\", \"temperature\": " + requestForm.config.temperature.ToString().Replace(",",".") + ", \"max_tokens\": " + requestForm.config.maxTokenPerRequest + "}";
             request.SetRequestHeader("Content-Type", "application/json");
             request.SetRequestHeader("Authorization", "Bearer " + auth.apiKey);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -89,14 +94,14 @@ public class OpenAI : MonoBehaviour
             ));
             //Get error if any
             yield return request.SendWebRequest();
-            if (request.isNetworkError || request.isHttpError)
+            if(request.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log(request.error + "\n"  + request.downloadHandler.text);
-                Debug.Log(uploadHandler);
+                GetRequestBack(request, requestForm);
             }
             else
             {
-                GetRequestBack(request, requestForm);
+                Debug.Log("Error: " + request.error + "\n" + request.downloadHandler.text);
+                Debug.Log(uploadHandler);
             }
         }
     }
