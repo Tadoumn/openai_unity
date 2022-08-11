@@ -55,7 +55,7 @@ public class TextRequestManager : MonoBehaviour
         foreach(GTag tag in tags)
         {
             prompt += "A robot saying that ";
-            prompt += tag.type + ";" + tag.tag + ";";
+            prompt += tag.type + " and " + tag.tag;
         }
         Debug.Log(prompt);
         return prompt;

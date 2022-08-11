@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class TextUIToOpenAI : MonoBehaviour
 {
+    [TextArea]
     public string prompt;
     public bool lookingForText = false;
     public string idRequest = "";
