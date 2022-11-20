@@ -44,6 +44,7 @@ public class TextRequestManager : MonoBehaviour
         OpenAI.OpenAIRequest request = new OpenAI.OpenAIRequest();
         request.id = to.id;
         request.prompt = PromptGenerator(tags);
+        idToCheck.Add(to);
         if(config != null)
             request.config = config;
         openAI.Request(request);
@@ -52,11 +53,12 @@ public class TextRequestManager : MonoBehaviour
     string PromptGenerator(GTag[] tags)
     {
         string prompt = "";
+        prompt += "A combat robot briefly saying that he received ";
         foreach(GTag tag in tags)
         {
-            prompt += "A robot saying that ";
-            prompt += tag.type + " and " + tag.tag;
+            prompt += tag.type + ": ";
         }
+        prompt += " from the enemy.";
         Debug.Log(prompt);
         return prompt;
     }

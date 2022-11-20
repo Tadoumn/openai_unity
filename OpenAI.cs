@@ -94,15 +94,15 @@ public class OpenAI : MonoBehaviour
             ));
             //Get error if any
             yield return request.SendWebRequest();
-            if(request.result == UnityWebRequest.Result.Success)
-            {
+            //if(request.result == UnityWebRequest.Result.Success)
+            //{
                 GetRequestBack(request, requestForm);
-            }
-            else
+            //}
+            /*else
             {
                 Debug.Log("Error: " + request.error + "\n" + request.downloadHandler.text);
                 Debug.Log(uploadHandler);
-            }
+            }*/
         }
     }
 }
